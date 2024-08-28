@@ -1,9 +1,9 @@
-import 'dotenv/config';
 import path from 'path';
 import express from 'express';
 import { noSniff } from 'helmet';
 import { AppConfig } from 'environment';
 import { MemoryStore } from 'express-session';
+import Config from './config';
 
 import app from "./app";
 
@@ -29,13 +29,16 @@ expressApp.use('/assets/fonts', express.static(path.resolve(__dirname, './public
  * this does mean that updating '.env' file will require updating the 'AppConfig' interface, 
  * which is located at '../typings/environment/index.d.ts' 
  */
-const appConfig = { ...process.env as AppConfig };
-const name = appConfig.SESSION_ID;
-const secret = appConfig.SESSIONS_SECRET;
-const ttl = parseInt(appConfig.SESSIONS_TTL_SECONDS);
-const secure = appConfig.SECURE_COOKIES === 'true';
-const casaMountUrl = appConfig.CASA_MOUNT_URL;
-const port = parseInt(appConfig.SERVER_PORT);
+const {
+  SESSION_ID: name,
+  SESSIONS_SECRET: secret,
+  SESSIONS_TTL_SECONDS: ttl,
+  SECURE_COOKIES: secure,
+  CASA_MOUNT_URL: casaMountUrl,
+  SERVER_PORT: port
+} = Config;
+
+console.log({ name, secret, ttl, secure, casaMountUrl, port });
 
 // !!IMPORTANT: this is ONLY for dev - MemoryStore is not suitable for PROD!
 const sessionStore = new MemoryStore();
