@@ -31,7 +31,7 @@ function parseEnvVar(key: string) {
 function getEnvVar(key: string) {
   const processValue = process.env[key];
   if(processValue) {
-    return parseEnvVar(processValue);
+    return parseEnvVar(key);
   }
   try {
     const value = config.get(key);
@@ -53,5 +53,6 @@ const Config = {
 } as Config;
 
 console.log(Config);
+console.log(process.env);
 
 export default Config;
