@@ -20,4 +20,6 @@ const Config: Config = {
   SECURE_COOKIES: config.get('SECURE_COOKIES'),
 }
 
+console.log(Config);
+
 export default Config;

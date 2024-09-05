@@ -1,0 +1,1 @@
+docker run -d -t -i -p 3000:3000 -e NODE_CONFIG_DIR=/app/config  --name config casa-config
