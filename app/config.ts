@@ -10,15 +10,47 @@ interface Config {
   SECURE_COOKIES: boolean
 }
 
-const Config: Config = {
-  MESSAGE: config.get('MESSAGE'),
-  SERVER_PORT: config.get('SERVER_PORT'),
-  CASA_MOUNT_URL: config.get('CASA_MOUNT_URL'),
-  SESSION_ID: config.get('SESSION_ID'),
-  SESSIONS_SECRET: config.get('SESSIONS_SECRET'),
-  SESSIONS_TTL_SECONDS: config.get('SESSIONS_TTL_SECONDS'),
-  SECURE_COOKIES: config.get('SECURE_COOKIES'),
+function parseEnvVar(key: string) {
+  switch(key) {
+    case "SECURE_COOKIES": {
+      return process.env[key] === 'true';
+    }
+    case "SERVER_PORT":
+    case "SESSIONS_TTL_SECONDS": {
+      const variable = process.env[key];
+      if(variable){
+        return parseInt(variable);
+      }
+      return undefined;
+    }
+    default:
+      return process.env[key];
+  }
 }
+
+function getEnvVar(key: string) {
+  const processValue = process.env[key];
+  if(processValue) {
+    return parseEnvVar(processValue);
+  }
+  try {
+    const value = config.get(key);
+    return value;
+  } catch(error) {
+    console.log(`env var ${key} is undefined`);
+    return undefined;
+  }
+}
+
+const Config = {
+  MESSAGE: getEnvVar('MESSAGE'),
+  SERVER_PORT: getEnvVar('SERVER_PORT'),
+  CASA_MOUNT_URL: getEnvVar('CASA_MOUNT_URL'),
+  SESSION_ID: getEnvVar('SESSION_ID'),
+  SESSIONS_SECRET: getEnvVar('SESSIONS_SECRET'),
+  SESSIONS_TTL_SECONDS: getEnvVar('SESSIONS_TTL_SECONDS'),
+  SECURE_COOKIES: getEnvVar('SECURE_COOKIES'),
+} as Config;
 
 console.log(Config);
 
